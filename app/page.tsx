@@ -19,8 +19,8 @@ export default function HomePage() {
           <p
             className={`${lusitana.className} text-xl text-gray-800 md:text-3xl md:leading-normal`}
           >
-            <strong className="text-point-color1">Welcome to Acme.</strong> This
-            is the example for the{' '}
+            <strong className="text-point-color1">환영 to Acme.</strong> This is
+            the example for the{' '}
             <a href="https://nextjs.org/learn/" className="text-blue-500">
               Next.js Learn Course
             </a>
