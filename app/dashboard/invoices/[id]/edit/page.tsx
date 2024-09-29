@@ -1,6 +1,7 @@
 import Form from '@/app/ui/invoices/edit-form';
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
 import { fetchInvoiceById, fetchCustomers } from '@/app/lib/data';
+import { notFound } from 'next/navigation';
 
 //params prop으로 id만 받아옴.
 export default async function EditPage({ params }: { params: { id: string } }) {
@@ -9,6 +10,11 @@ export default async function EditPage({ params }: { params: { id: string } }) {
     fetchInvoiceById(id),
     fetchCustomers(),
   ]);
+
+  // 송장데이터 없을경우 실행
+  if (!invoice) {
+    notFound();
+  }
 
   return (
     <main>

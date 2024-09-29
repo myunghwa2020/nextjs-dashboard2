@@ -1,3 +1,5 @@
+'use client';
+
 import { lusitana } from '@/app/ui/fonts';
 import {
   AtSymbolIcon,
@@ -6,10 +8,23 @@ import {
 } from '@heroicons/react/24/outline';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { Button } from './button';
+import { useActionState } from 'react';
+import { authenticate } from '@/app/lib/actions';
 
 export default function LoginForm() {
+  // useActionState훅은 리액트19에 추가된 훅이며 폼관리와 서버액션 호출을 위해 사용
+  // useActionState(폼의 액션과 연결될 서버액션함수, 초기값)
+  // errorMessage: authenticate함수의 리턴 오류 메세지
+  // formAction: 서버액션이 연결된 함수
+  // isPending: 액션실행후 서버가 응답중이면 true, 응답완료시 false
+  // useActionState의 리턴값이 리액트와 다르며 nextjs에서 기능을 추가했기때문
+  const [errorMessage, formAction, isPending] = useActionState(
+    authenticate,
+    undefined
+  );
+
   return (
-    <form className="space-y-3">
+    <form action={formAction} className="space-y-3">
       <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
         <h1 className={`${lusitana.className} mb-3 text-2xl`}>
           Please log in to continue.
