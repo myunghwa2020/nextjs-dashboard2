@@ -2,19 +2,19 @@
 
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+import { useDebouncedCallback } from 'use-debounce';
 
 export default function Search({ placeholder }: { placeholder: string }) {
-  // 검색 매개변수훅을 변수에 대입
+  //useSearchParams 에는 get메서드만 있음
   const searchParams = useSearchParams();
-  // URL 경로 가져오기
   const pathname = usePathname();
-  // 라우터 replace함수로 url 업데이트
   const { replace } = useRouter();
 
-  // 이벤트핸들러 사용시 클라이언트 컴포넌트여야함
-  function handleSearch(term: string) {
-    // 검색 매개변수 사용하는 인스턴스 생성
+  const handleSearch = useDebouncedCallback((term: string) => {
+    console.log(`Searching... ${term}`);
+    // 검색 매개변수 사용하는 인스턴스 생성해야 set,delete사용가능
     const params = new URLSearchParams(searchParams);
+    params.set('page', '1');
 
     // 입력이 빈칸이면 delete로 query 파라메터 삭제
     if (term) {
@@ -22,14 +22,10 @@ export default function Search({ placeholder }: { placeholder: string }) {
     } else {
       params.delete('query');
     }
-    console.log(params.get('query'));
-    console.log(params.toString());
 
-    // url 업데이트
+    // url 업데이트: toString()으로 파라메터명과 값을 모두 가져옴
     replace(`${pathname}?${params.toString()}`);
-
-    // console.log(term);
-  }
+  }, 500);
 
   return (
     <div className="relative flex flex-grow ">
@@ -41,6 +37,8 @@ export default function Search({ placeholder }: { placeholder: string }) {
         placeholder={placeholder}
         id="search"
         onChange={(e) => handleSearch(e.target.value)}
+        // value를 사용하지 않고 url의 쿼리스트링 값을 사용하므로
+        // 초기값만 value로 사용
         defaultValue={searchParams.get('query')?.toString()}
       />
       <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
